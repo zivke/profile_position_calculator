@@ -50,27 +50,13 @@ motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *
 
         init_position_profile_limits(&motion_profiles[i], MAX_ACCELERATION, MAX_VELOCITY, MAX_POSITION, MIN_POSITION);
 
-        // TODO: The case when the target position is smaller than the MAX_ACCELERATION
         while(1) {
-            calculated_steps = init_position_profile(&motion_profiles[i], target_positions[i], start_positions[i], \
-                                                     profile_velocity, acceleration, deceleration);
-            if (calculated_steps > max_steps) {
-                // Make sure that returning to a previous position works as well
-                int profile_velocity_correction;
-                if (profile_velocity > 0) {
-                    profile_velocity_correction = profile_velocity++;
-                } else {
-                    profile_velocity_correction = profile_velocity--;
-                }
-
-                // Just recalculate the position profile with the corrected velocity to get the correct motion profile
-                // (no need to actually save the calculated steps)
-                init_position_profile(&motion_profiles[i], target_positions[i], start_positions[i], \
-                                      profile_velocity_correction, acceleration, deceleration);
-                break;
-            } else if (calculated_steps == max_steps) {
+            if (calculated_steps >= max_steps) {
                 break;
             }
+
+            calculated_steps = init_position_profile(&motion_profiles[i], target_positions[i], start_positions[i], \
+                                                     profile_velocity, acceleration, deceleration);
 
             // Make sure that returning to a previous position works as well
             if (profile_velocity > 0) {

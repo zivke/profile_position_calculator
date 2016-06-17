@@ -133,13 +133,13 @@ int main(int argc, char **argv) {
         array[i] = data + i * TOTAL_MOTORS;
     }
 
-    int gripper = 0;
+    int *gripper = malloc(n_rows * sizeof(int));
 
     // Read each line of data and put in its place (can read exactly 6 positions and the gripper value)
     int line = 0;
     while(!feof(file)) {
         fscanf(file, "%d,%d,%d,%d,%d,%d,%d\n", &array[line][0], &array[line][1], &array[line][2], &array[line][3], \
-                                               &array[line][4], &array[line][5], &gripper);
+                                               &array[line][4], &array[line][5], &gripper[line]);
         line++;
     }
 
@@ -155,10 +155,11 @@ int main(int argc, char **argv) {
 
     // Calculate the profile position sections and APPEND them to the result file
     for (int i = 0; i < n_rows - 1; i++) {
-        connect_positions(array[i+1], array[i], TOTAL_MOTORS, gripper);
+        connect_positions(array[i+1], array[i], TOTAL_MOTORS, gripper[i]);
     }
 
     free(array);
+    free(gripper);
 
     fclose(file);
 

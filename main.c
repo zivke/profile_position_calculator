@@ -100,6 +100,7 @@ void connect_positions(int *target_positions, int *start_positions, int n_axis, 
         }
     }
 
+    // Open the file for appending
     FILE *file = fopen("calculated_positions.csv", "a");
     if (file == NULL)
     {
@@ -107,6 +108,7 @@ void connect_positions(int *target_positions, int *start_positions, int n_axis, 
         exit(1);
     }
 
+    // Calculate the bridging positions and append them to the result file
     for (int i = 0; i <= motion_profiles[highest_offset_motor_index].steps; i++) {
         for (int j = 0; j < n_axis; j++) {
             int position = position_profile_generate(&motion_profiles[j], i);
@@ -163,6 +165,7 @@ int main(int argc, char **argv) {
 
     fclose(file);
 
+    // Open the file for writting so that each connect_positions() function call can append to the result file
     file = fopen("calculated_positions.csv", "w");
     if (file == NULL)
     {

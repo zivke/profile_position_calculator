@@ -68,6 +68,8 @@ motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *
                 init_position_profile(&motion_profiles[i], target_positions[i], start_positions[i], \
                                       profile_velocity_correction, acceleration, deceleration);
                 break;
+            } else if (calculated_steps == max_steps) {
+                break;
             }
 
             // Make sure that returning to a previous position works as well

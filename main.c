@@ -18,7 +18,7 @@ int get_highest_position_offset_motor(int *target_positions, int *start_position
     int delta_max = 0;
     int highest_offset_motor_index = 0;
     for (int i = 0; i < n_axis; i++) {
-        int delta = target_positions[i] - start_positions[i];
+        int delta = abs(target_positions[i] - start_positions[i]);
         if (delta > delta_max) {
             delta_max = delta;
             highest_offset_motor_index = i;

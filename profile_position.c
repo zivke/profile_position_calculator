@@ -53,6 +53,11 @@ int init_position_profile(motion_profile_t *motion_profile, int target_position,
     // compute distance
     motion_profile->total_distance = motion_profile->qf - motion_profile->qi;
 
+    // There is no point in calculating with these values
+    if (motion_profile->total_distance == 0 || motion_profile->vi == 0) {
+        return 0;
+    }
+
     motion_profile->direction = 1;
 
     if (motion_profile->total_distance < 0) {
@@ -207,10 +212,16 @@ int init_position_profile(motion_profile_t *motion_profile, int target_position,
 
     motion_profile->steps = (int) round(motion_profile->T);
 
-    return (int) round(motion_profile->T);
+    return motion_profile->steps;
 }
 
 int position_profile_generate(motion_profile_t *motion_profile, int step) {
+
+    // If the actual and the target positions are already equal,
+    // just return one of them as a target position
+    if (motion_profile->qi == motion_profile->qf) {
+        return motion_profile->qf;
+    }
 
     motion_profile->ts = motion_profile->s_time * step ;
 

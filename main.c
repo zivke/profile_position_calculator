@@ -45,13 +45,13 @@ motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *
             continue;
         }
 
-        int calculated_steps = 0;
+        int calculated_steps = -1;
         int profile_velocity = velocity;
 
         init_position_profile_limits(&motion_profiles[i], MAX_ACCELERATION, MAX_VELOCITY, MAX_POSITION, MIN_POSITION);
 
         while(1) {
-            if (calculated_steps >= max_steps) {
+            if (calculated_steps >= max_steps || calculated_steps == 0) {
                 break;
             }
 

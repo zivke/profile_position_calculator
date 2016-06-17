@@ -129,6 +129,16 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+    // Check if the file ends with a new line
+    fseek(file, -1, SEEK_END);
+    if (getc(file) != '\n') {
+        printf("The input file doesn't end with a new line!\n");
+        exit(1);
+    }
+
+    // Reset the file pointer to the beginning of the file
+    rewind(file);
+
     // Count all of the target points in the input file (by counting rows)
     char c;
     int n_rows = 0;
@@ -137,6 +147,7 @@ int main(int argc, char **argv) {
             n_rows++;
         }
     }
+
     // Reset the file pointer to the beginning of the file
     rewind(file);
 

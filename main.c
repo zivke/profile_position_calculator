@@ -168,7 +168,7 @@ int main(int argc, char **argv) {
     }
 
     // Calculate the profile position sections and APPEND them to the result file
-    for (int i = 0; i < n_rows; i++) {
+    for (int i = 0; i < n_rows - 1; i++) {
         connect_positions(array[i+1], array[i], TOTAL_MOTORS, gripper);
     }
 

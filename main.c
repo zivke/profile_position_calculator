@@ -75,6 +75,9 @@ motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *
         }
     }
 
+    free(calculated_steps);
+    free(profile_velocity);
+
     return motion_profiles;
 }
 
@@ -115,6 +118,8 @@ void connect_positions(int *target_positions, int *start_positions, int n_axis, 
             }
         }
     }
+
+    free(motion_profiles);
 
     fclose(file);
 }
@@ -169,6 +174,8 @@ int main(int argc, char **argv) {
     for (int i = 0; i < n_rows; i++) {
         connect_positions(array[i+1], array[i], TOTAL_MOTORS, gripper);
     }
+
+    free(array);
 
     fclose(file);
 

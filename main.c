@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
 
     fclose(file);
 
-    // Open the file for writting so that each connect_positions() function call can append to the result file
+    // Open the file for writing so that each connect_positions() function call can append to the result file
     file = fopen("calculated_positions.csv", "w");
     if (file == NULL)
     {

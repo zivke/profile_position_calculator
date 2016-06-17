@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
 
     // Create the 2D array to hold all of the read data from the input file
     int **array = malloc(n_rows * sizeof *array + (n_rows * (TOTAL_MOTORS * sizeof **array)));
-    int *data = array + n_rows;
+    int *data = (int*) (array + n_rows);
     for(int i = 0; i < n_rows; i++) {
         array[i] = data + i * TOTAL_MOTORS;
     }

@@ -73,6 +73,7 @@ typedef struct motion_profile_t {
 /**
  * @brief Initialize Position Profile Limits
  *
+ * @param motion_profile
  * @param max_acceleration for the position profile
  * @param max_velocity for the position profile
  * @param max_position
@@ -84,6 +85,7 @@ void init_position_profile_limits(motion_profile_t *motion_profile, int max_acce
 /**
  * @brief Initialize Position Profile
  *
+ * @param motion_profile
  * @param target_position
  * @param actual_position
  * @param velocity for the position profile
@@ -97,6 +99,7 @@ int init_position_profile(motion_profile_t *motion_profile, int target_position,
 /**
  * @brief Generate Position Profile
  *
+ * @param motion_profile
  * @param step current step of the profile
  *
  * @return corresponding target position at the step input

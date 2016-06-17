@@ -10,13 +10,11 @@
 
 #define MAX_TICKS_PER_TURN 65536
 
-int rpm_to_ticks_sensor(int rpm, int max_ticks_per_turn)
-{
+int rpm_to_ticks_sensor(int rpm, int max_ticks_per_turn) {
     return (rpm * MAX_TICKS_PER_TURN)/60;
 }
 
-void init_position_profile_limits(motion_profile_t *motion_profile, int max_acceleration, int max_velocity, int max_position, int min_position)
-{
+void init_position_profile_limits(motion_profile_t *motion_profile, int max_acceleration, int max_velocity, int max_position, int min_position) {
 
     motion_profile->max_position =  max_position;
     motion_profile->min_position = min_position;
@@ -25,8 +23,8 @@ void init_position_profile_limits(motion_profile_t *motion_profile, int max_acce
     motion_profile->limit_factor = 10;
 }
 
-int init_position_profile(motion_profile_t *motion_profile, int target_position, int actual_position, int velocity, int acceleration, int deceleration)
-{
+int init_position_profile(motion_profile_t *motion_profile, int target_position, int actual_position, int velocity, int acceleration, int deceleration) {
+
     motion_profile->qf = (float) target_position;
     motion_profile->qi = (float) actual_position;
 
@@ -44,12 +42,12 @@ int init_position_profile(motion_profile_t *motion_profile, int target_position,
         motion_profile->vi = motion_profile->max_velocity;
     }
 
-    // Internal params
+    // Internal parameters
     motion_profile->acc_too_low = 0;
 
     motion_profile->qid = 0.0f;
 
-    // leads to shorter blend times in the begining (if init condition != 0) non zero case - not yet considered
+    // leads to shorter blend times in the beginning (if initialization condition != 0) non zero case - not yet considered
     motion_profile->qfd = 0.0f;
 
     // compute distance
@@ -212,8 +210,8 @@ int init_position_profile(motion_profile_t *motion_profile, int target_position,
     return (int) round(motion_profile->T);
 }
 
-int position_profile_generate(motion_profile_t *motion_profile, int step)
-{
+int position_profile_generate(motion_profile_t *motion_profile, int step) {
+
     motion_profile->ts = motion_profile->s_time * step ;
 
     if (motion_profile->ts < motion_profile->tb_acc) {

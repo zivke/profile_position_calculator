@@ -3,7 +3,7 @@
 #include "profile.h"
 
 #define TOTAL_MOTORS 6
-#define MAX_ACCELERATION 5000
+#define MAX_ACCELERATION 4000
 #define MAX_VELOCITY 4500
 #define MAX_POSITION 2000000000
 #define MIN_POSITION -2000000000
@@ -14,6 +14,7 @@
 
 // Find highest position offset motor index
 int get_highest_position_offset_motor(int *target_positions, int *start_positions, int n_axis) {
+
     int delta_max = 0;
     int highest_offset_motor_index = 0;
     for (int i = 0; i < n_axis; i++) {
@@ -83,6 +84,7 @@ motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *
 
 // Calculate the profile position sections and APPEND them to the result file
 void connect_positions(int *target_positions, int *start_positions, int n_axis, int gripper) {
+
     motion_profile_t *motion_profiles;
 
     motion_profiles = init_position_profile_multi_axis(target_positions, start_positions, n_axis, \

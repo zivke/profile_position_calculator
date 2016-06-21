@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
     // The first argument is the input file name (CSV format with commas)
     FILE *file = fopen(argv[1], "r");
     if (file == NULL) {
-        printf("Error opening input file!\n");
+        printf("Error opening the input file!\n");
         exit(1);
     }
 
@@ -174,7 +174,7 @@ int main(int argc, char **argv) {
     file = fopen("calculated_positions.csv", "w");
     if (file == NULL)
     {
-        printf("Error opening output file!\n");
+        printf("Error opening the output file!\n");
         exit(1);
     }
 

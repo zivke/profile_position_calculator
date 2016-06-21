@@ -29,13 +29,13 @@ int get_highest_position_offset_motor(int *target_positions, int *start_position
 }
 
 motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *start_positions, int n_axis, \
-                                                    int velocity, int acceleration, int deceleration) {
+                                                    int velocity, int acceleration, int deceleration, int max_velocity) {
 
     motion_profile_t *motion_profiles = malloc(n_axis * sizeof(motion_profile_t));
 
     int highest_offset_motor_index = get_highest_position_offset_motor(target_positions, start_positions, n_axis);
 
-    init_position_profile_limits(&motion_profiles[highest_offset_motor_index], MAX_ACCELERATION, MAX_VELOCITY, MAX_POSITION, MIN_POSITION);
+    init_position_profile_limits(&motion_profiles[highest_offset_motor_index], MAX_ACCELERATION, max_velocity, MAX_POSITION, MIN_POSITION);
 
     int max_steps = init_position_profile(&motion_profiles[highest_offset_motor_index], target_positions[highest_offset_motor_index], \
                                           start_positions[highest_offset_motor_index], velocity, acceleration, deceleration);
@@ -48,7 +48,7 @@ motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *
         int calculated_steps = 0;
         int profile_velocity = velocity;
 
-        init_position_profile_limits(&motion_profiles[i], MAX_ACCELERATION, MAX_VELOCITY, MAX_POSITION, MIN_POSITION);
+        init_position_profile_limits(&motion_profiles[i], MAX_ACCELERATION, max_velocity, MAX_POSITION, MIN_POSITION);
 
         while(1) {
             calculated_steps = init_position_profile(&motion_profiles[i], target_positions[i], start_positions[i], \
@@ -85,12 +85,13 @@ motion_profile_t * init_position_profile_multi_axis(int *target_positions, int *
 }
 
 // Calculate the profile position sections and APPEND them to the result file
-void connect_positions(int *target_positions, int *start_positions, int n_axis, int gripper) {
+void connect_positions(int *target_positions, int *start_positions, int n_axis, int gripper, int max_velocity) {
 
     motion_profile_t *motion_profiles;
 
     motion_profiles = init_position_profile_multi_axis(target_positions, start_positions, n_axis, \
-                                                       USER_PROFILE_VELOCITY, USER_PROFILE_ACCELERATION, USER_PROFILE_DECELERATION);
+                                                       USER_PROFILE_VELOCITY, USER_PROFILE_ACCELERATION, USER_PROFILE_DECELERATION,
+                                                       max_velocity);
 
     int highest_offset_motor_index = get_highest_position_offset_motor(target_positions, start_positions, n_axis);
 
@@ -170,6 +171,18 @@ int main(int argc, char **argv) {
 
     fclose(file);
 
+    int max_velocity = MAX_VELOCITY;
+
+    // Get the maximum velocity from the command line arguments
+    if (argc == 3) {
+        if (sscanf (argv[2], "%i", &max_velocity) != 1) {
+            printf ("ERROR: maximum velocity not an integer - using the default value (%d)\n", max_velocity);
+        }
+    } else {
+        printf("INFO: Using the default maximum velocity (%d). A custom maximum velocity can be sent as the second "
+               "command argument.\n", max_velocity);
+    }
+
     // Open the file for writing so that each connect_positions() function call can append to the result file
     file = fopen("calculated_positions.csv", "w");
     if (file == NULL)
@@ -180,7 +193,7 @@ int main(int argc, char **argv) {
 
     // Calculate the profile position sections and APPEND them to the result file
     for (int i = 0; i < n_rows - 1; i++) {
-        connect_positions(array[i+1], array[i], TOTAL_MOTORS, gripper[i]);
+        connect_positions(array[i+1], array[i], TOTAL_MOTORS, gripper[i], max_velocity);
     }
 
     free(array);
